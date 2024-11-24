@@ -1,0 +1,1 @@
+export const RendezVousUrl = 'RendezVous';
