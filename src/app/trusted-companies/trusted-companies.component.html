@@ -51,7 +51,8 @@
 
  
   <!-- Modal Dialog -->
-<p-dialog [(visible)]="showModal" header="Your Cart" [closable]="true" (onHide)="closeModal()">
+  <p-dialog [(visible)]="showModal" header="Your Cart" [closable]="true" (onHide)="closeModal()" 
+  [style]="{'position': 'absolute', 'top': '20px', 'right': '20px', 'width': '400px'}">
   <ng-template pTemplate="content">
     <div *ngIf="cartItems.length > 0">
       <div class="cart-item" *ngFor="let item of cartItems">
@@ -78,6 +79,6 @@
     </div>
   </ng-template>
 </p-dialog>
-
+  
 </section>
 <p-toast></p-toast>

@@ -4,6 +4,71 @@
   margin: 0;
   padding: 0;
 }
+/* Ensure that the image fits within the modal */
+.cart-item-image {
+  width: 100%; /* Ensure it takes up full available width */
+  max-width: 300px; /* Limit the max width to prevent the image from becoming too large */
+  height: auto; /* Maintain aspect ratio */
+  object-fit: cover; /* Optional: Makes sure the image covers the area, cutting off any excess */
+  border-radius: 8px; /* Optional: Round corners for a polished look */
+}
+.p-dialog {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 400px; /* Adjust this to your desired width */
+  z-index: 1000; /* Ensures the modal appears above other content */
+}
+
+.p-dialog .cart-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.p-dialog .cart-item img {
+  width: 100%;
+  max-width: 200px; /* Adjust the image size within the dialog */
+  height: auto;
+  object-fit: contain; /* Ensure the image is fully visible without distortion */
+}
+
+.p-dialog .cart-item-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-quantity {
+  padding: 0.5rem;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-quantity:hover {
+  background-color: #0056b3;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #ff4d4f;
+  font-size: 1.2em;
+}
+
+.btn-icon:hover {
+  color: #ff0000;
+}
 
 body {
   display: flex;
