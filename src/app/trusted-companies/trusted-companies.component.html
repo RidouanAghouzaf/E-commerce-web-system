@@ -1,21 +1,45 @@
 <section>
   <h2>Leading companies<br />have trusted us</h2>
 
-  <!-- Animated Search Input -->
-  <div class="search">
-    <svg x="0px" y="0px" viewBox="0 0 24 24" width="20px" height="20px">
-      <g stroke-linecap="square" stroke-linejoin="miter" stroke="currentColor">
-        <line fill="none" stroke-miterlimit="10" x1="22" y1="22" x2="16.4" y2="16.4" />
-        <circle fill="none" stroke="currentColor" stroke-miterlimit="10" cx="10" cy="10" r="9" />
-      </g>
-    </svg>
-    <input
-      pInputText
-      class="ng-invalid ng-dirty"
-      [(ngModel)]="searchQuery"
-      placeholder="Search companies..."
-      (input)="onSearch($event)"
-    />
+  <!-- Search Section with Category Dropdown -->
+  <div class="search-container">
+    <!-- Category Dropdown -->
+    <p-dropdown 
+    [(ngModel)]="selectedCategory" 
+    [options]="categoryOptions"
+    optionLabel="label"
+    placeholder="Select Category"
+    (onChange)="onSearch()">
+  </p-dropdown>
+
+    <!-- Search Input with Animated Search Icon -->
+    <div class="search">
+      <svg x="0px" y="0px" viewBox="0 0 24 24" width="20px" height="20px">
+        <g stroke-linecap="square" stroke-linejoin="miter" stroke="currentColor">
+          <line fill="none" stroke-miterlimit="10" x1="22" y1="22" x2="16.4" y2="16.4" />
+          <circle fill="none" stroke="currentColor" stroke-miterlimit="10" cx="10" cy="10" r="9" />
+        </g>
+      </svg>
+      <input
+  pInputText
+  class="ng-invalid ng-dirty"
+  placeholder="Search companies..."
+  (input)="onSearchInput($event)"
+/>
+    </div>
+    
+    <!-- Dropdown Suggestions for Perfumes -->
+    <div *ngIf="isSearchOpen && filteredCompanies.length > 0" class="dropdown">
+      <ul>
+        <li *ngFor="let company of filteredCompanies" (click)="addToCart(company)">
+          <img [src]="company.image" alt="{{ company.name }}" class="perfume-image" />
+          <div class="company-details">
+            <h4>{{ company.name }}</h4>
+            <p>{{ company.description }}</p>
+          </div>
+        </li>
+      </ul>
+    </div>
   </div>
 
   <!-- Company Cards -->
@@ -49,36 +73,36 @@
     </div>
   </div>
 
- 
-  <!-- Modal Dialog -->
+  <!-- Modal Dialog for Cart -->
   <p-dialog [(visible)]="showModal" header="Your Cart" [closable]="true" (onHide)="closeModal()" 
-  [style]="{'position': 'absolute', 'top': '20px', 'right': '20px', 'width': '400px'}">
-  <ng-template pTemplate="content">
-    <div *ngIf="cartItems.length > 0">
-      <div class="cart-item" *ngFor="let item of cartItems">
-        <img [src]="item.image" [alt]="item.name" class="cart-item-image" />
-        <div class="cart-item-details">
-          <h3>{{ item.name }}</h3>
-          <p>{{ item.description }}</p>
-          
-          <!-- Quantity Control Buttons -->
-          <div class="quantity-control">
-            <button class="btn-quantity" (click)="decreaseQuantity(item)">-</button>
-            <span>{{ item.quantity }}</span>
-            <button class="btn-quantity" (click)="increaseQuantity(item)">+</button>
+            [style]="{'position': 'absolute', 'top': '20px', 'right': '20px', 'width': '400px'}">
+    <ng-template pTemplate="content">
+      <div *ngIf="cartItems.length > 0">
+        <div class="cart-item" *ngFor="let item of cartItems">
+          <img [src]="item.image" [alt]="item.name" class="cart-item-image" />
+          <div class="cart-item-details">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <p>Price: ${{ item.price }}</p>
+            <p>Quantity: {{ item.quantity }}</p>
+            <p><strong>Subtotal:</strong> ${{ item.subtotal }}</p>
+            <div class="quantity-control">
+              <button class="btn-quantity" (click)="decreaseQuantity(item)">-</button>
+              <span>{{ item.quantity }}</span>
+              <button class="btn-quantity" (click)="increaseQuantity(item)">+</button>
+            </div>
           </div>
+          <button class="btn-icon btn-delete" (click)="removeFromCart(item)">
+            <i class="pi pi-trash"></i>
+          </button>
         </div>
-        <!-- Delete Icon -->
-        <button class="btn-icon btn-delete" (click)="removeFromCart(item)">
-          <i class="pi pi-trash"></i>
-        </button>
       </div>
-    </div>
-    <div *ngIf="cartItems.length === 0">
-      <p>Your cart is empty.</p>
-    </div>
-  </ng-template>
-</p-dialog>
-  
+      
+      <div *ngIf="cartItems.length === 0">
+        <p>Your cart is empty.</p>
+      </div>
+    </ng-template>
+  </p-dialog>
+
 </section>
 <p-toast></p-toast>

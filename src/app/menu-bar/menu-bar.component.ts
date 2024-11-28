@@ -5,6 +5,7 @@ import { MenuItem } from 'primeng/api';
 import { CartService } from '../services/cart.service';
 import { DialogModule } from 'primeng/dialog'; // Import Dialog module
 import { CommonModule } from '@angular/common';
+import { SharedService } from '../services/shared.service';
 
 
 @Component({
@@ -18,13 +19,20 @@ export class MenuBarComponent {
   cartItemCount :number= 0; // Tracks the number of items in the cart
   showCartModal:boolean =false;
   cartItems: any[] = [];//tableau pour store cart items
-  constructor(private cartService: CartService) {}
+  searchQuery: string =''
+  constructor(private cartService: CartService,
+    private sharedService: SharedService
+  ) {}
   // items: MenuItem[] | undefined;
 
   ngOnInit() : void {
     // Subscribe to cart changes
     this.cartService.cartItemsChanged.subscribe((cartItems: any[]) => {
       this.cartItemCount = cartItems.length; // Update cart item count
+      this.sharedService.searchQuery$.subscribe((query) => {
+        this.searchQuery = query; // Update the search query locally
+        console.log('Updated search query:', query);
+      });
     });
 
     // Initialize the cart count
@@ -63,4 +71,8 @@ items = [
 // removeFromCart(index: number): void {
 //   this.cartItems.splice(index, 1);
 // }
+handleSearchInput(event: Event): void {
+  const inputValue = (event.target as HTMLInputElement).value || '';
+  this.sharedService.updateSearchQuery(inputValue); // Update the search query in the shared service
+}
 }

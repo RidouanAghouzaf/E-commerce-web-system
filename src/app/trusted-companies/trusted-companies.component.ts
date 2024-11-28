@@ -6,46 +6,121 @@ import { CartService } from '../services/cart.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject } from 'rxjs';
+import { SharedService } from '../services/shared.service';
 
+
+interface Perfume {
+  name: string;
+  image: string;
+  description: string;
+  tags: string[];
+}
 @Component({
   selector: 'app-trusted-companies',
   standalone: true,
-  imports: [CommonModule, DialogModule, FormsModule, ToastModule, InputTextModule],
+  imports: [CommonModule, DialogModule, FormsModule, ToastModule, InputTextModule,DropdownModule],
   providers: [MessageService],
   templateUrl: './trusted-companies.component.html',
   styleUrls: ['./trusted-companies.component.scss']
 })
 export class TrustedCompaniesComponent {
+  private searchSubject = new Subject<string>();
+  totalPrice: number = 0;
+
   constructor(
     private cartService: CartService,
-    private messageService: MessageService
-  ) {}
-
+    private messageService: MessageService,
+    private sharedService: SharedService
+  ) {
+    // Setup search query debounce
+    this.searchSubject.pipe(
+      debounceTime(300), // Wait for 300ms after the user stops typing
+      distinctUntilChanged() // Trigger search only if the query has changed
+    ).subscribe(searchQuery => {
+      this.searchQuery = searchQuery;
+      this.onSearch();
+    })
+  }
+  onSearchInput(event: Event): void {
+  const inputValue = (event.target as HTMLInputElement).value || '';
+  this.searchSubject.next(inputValue); // Pass the input value to the subject
+}
+ 
+  
   // Variables
+  showModal: boolean = false;
   cartItems: any[] = []; // Array to hold cart items
-  companies = [
-    {
-      name: 'Trust & Co.',
-      image: 'https://images.unsplash.com/photo-1601049676869-702ea24cfd58?q=80&w=2073&auto=format&fit=crop',
-      description: 'Fill out the form and the algorithm will offer the right team of experts.',
-      tags: ['branding', 'packaging']
+  parfumswomen = [
+    { 
+      name: 'Trust & Co. (Women)', 
+      image: 'https://images.unsplash.com/photo-1601049676869-702ea24cfd58?q=80&w=2073&auto=format&fit=crop', 
+      description: 'Women perfume.', 
+      tags: ['branding', 'luxury'],
+      price:50
     },
-    {
-      name: 'Tonic',
-      image: 'https://images.unsplash.com/photo-1613235788366-270e7ac489f3?q=80&w=2070&auto=format&fit=crop',
-      description: 'Fill out the form and the algorithm will offer the right team of experts.',
-      tags: ['branding', 'marketing']
+    { 
+      name: 'Tonic (Women)', 
+      image: 'https://images.unsplash.com/photo-1672848700942-68b6a4550540?q=80&w=1935&auto=format&fit=crop', 
+      description: 'Women fragrance.', 
+      tags: ['luxury', 'floral'],
+      price:65
     },
-    {
-      name: 'Shower Gel',
-      image: 'https://images.unsplash.com/photo-1673847401561-fcd75a7888c5?q=80&w=2070&auto=format&fit=crop',
-      description: 'Fill out the form and the algorithm will offer the right team of experts.',
-      tags: ['branding', 'packaging', 'marketing']
+    { 
+      name: 'Interdit (Women)', 
+      image: 'https://images.unsplash.com/photo-1667480099552-92bfee05685d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      description: 'Women fragrance.', 
+      tags: ['luxury', 'floral'],
+      price:70
+    },
+    { 
+      name: 'Gio (Women)', 
+      image: 'https://images.unsplash.com/photo-1706924179763-7f2744656823?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      description: 'Giorgia armani.', 
+      tags: ['luxury', 'floral'],
+      price:34
     }
+
   ];
 
-  filteredCompanies = [...this.companies];
-  showModal: boolean = false;
+  parfumsmen = [
+    { 
+      name: 'Shower Gel (Men)', 
+      image: 'https://images.unsplash.com/photo-1673847401561-fcd75a7888c5?q=80&w=2070&auto=format&fit=crop', 
+      description: 'Men’s shower gel fragrance.', 
+      tags: ['refreshing', 'masculine'],
+      price:40 
+    },
+    { 
+      name: 'Tonic (Men)', 
+      image: 'https://images.unsplash.com/photo-1672848700942-68b6a4550540?q=80&w=1935&auto=format&fit=crop', 
+      description: 'Men fragrance.', 
+      tags: ['fresh', 'citrus'],
+      price:90 
+    },
+    { 
+      name: 'Hugo Boss (Men)', 
+      image: 'https://images.unsplash.com/photo-1664198891866-8a35b73bb95f?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      description: 'Joe Malone.', 
+      tags: ['fresh', 'citrus'],
+      price:49 
+    },
+    { 
+      name: 'King (men)', 
+      image: 'https://images.unsplash.com/photo-1637336698223-0d5f048b09ee?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
+      description: 'King of Seduction.', 
+      tags: ['luxury', 'floral'],
+      price:122
+    },
+  ];
+  categoryOptions: { label: string, value: string }[] = [
+    { label: 'Women', value: 'parfumswomen' },
+    { label: 'Men', value: 'parfumsmen' }
+  ];
+  selectedCategory: string = 'parfumswomen'; // Default to Women’s perfumes
+  filteredCompanies: any[] = [...this.parfumswomen]; // Initially show women's perfumes  showModal: boolean = false;
   selectedCompany: any = null;
   searchQuery = ''; // Tracks the search input value
   isSearchOpen = false;
@@ -61,13 +136,20 @@ export class TrustedCompaniesComponent {
     this.showModal = false;
   }
 
-  // Handle search input
-  onSearch(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const query = input.value.trim().toLowerCase();
-    this.filteredCompanies = this.companies.filter(company =>
-      company.name.toLowerCase().includes(query)
-    );
+  // Filter based on both search query and category
+  onSearch(): void {
+    console.log('Selected Category:', this.selectedCategory);
+    console.log('Search Query:', this.searchQuery);
+  
+    // Reset filtered companies based on selected category
+    this.filteredCompanies = this.selectedCategory === 'parfumswomen' ? this.parfumswomen : this.parfumsmen;
+  
+    // Apply search filtering on name
+    if (this.searchQuery) {
+      this.filteredCompanies = this.filteredCompanies.filter(company =>
+        company.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+    }
   }
 
   // Get tag color
@@ -84,18 +166,26 @@ export class TrustedCompaniesComponent {
   addToCart(company: any): void {
     const existingItem = this.cartItems.find(item => item.name === company.name);
     if (existingItem) {
-      existingItem.quantity += 1; // Increase quantity if item already exists
+      existingItem.quantity += 1;
+      existingItem.subtotal = existingItem.price * existingItem.quantity; // Update subtotal
     } else {
-      this.cartItems.push({ ...company, quantity: 1 }); // Add new item with quantity 1
+      this.cartItems.push({ 
+        ...company, 
+        quantity: 1, 
+        subtotal: company.price // Initialize subtotal
+      });
     }
-    this.cartService.updateCart(this.cartItems); // Update cart in the service
+    this.cartService.updateCart(this.cartItems);
+    this.calculateTotalPrice(); // Update total price
     this.messageService.add({ severity: 'success', summary: 'Success', detail: `${company.name} added to cart!` });
   }
+  
 
   // Remove item from cart
   removeFromCart(item: any): void {
     this.cartItems = this.cartItems.filter(i => i.name !== item.name);
     this.cartService.updateCart(this.cartItems); // Update cart in the service
+    this.calculateTotalPrice();//update total price
     this.messageService.add({ severity: 'info', summary: 'Removed', detail: `${item.name} removed from cart.` });
   }
 
@@ -104,7 +194,9 @@ export class TrustedCompaniesComponent {
     const cartItem = this.cartItems.find(i => i.name === item.name);
     if (cartItem) {
       cartItem.quantity += 1;
-      this.cartService.updateCart(this.cartItems); // Update cart in the service
+      cartItem.subtotal = cartItem.price * cartItem.quantity; // Update subtotal
+      this.cartService.updateCart(this.cartItems);
+      this.calculateTotalPrice(); // Update total price
     }
   }
 
@@ -113,7 +205,9 @@ export class TrustedCompaniesComponent {
     const cartItem = this.cartItems.find(i => i.name === item.name);
     if (cartItem && cartItem.quantity > 1) {
       cartItem.quantity -= 1;
-      this.cartService.updateCart(this.cartItems); // Update cart in the service
+      cartItem.subtotal = cartItem.price * cartItem.quantity; // Update subtotal
+      this.cartService.updateCart(this.cartItems);
+      this.calculateTotalPrice(); // Update total price
     }
   }
 
@@ -136,4 +230,8 @@ export class TrustedCompaniesComponent {
   closeSearch(): void {
     this.isSearchOpen = false;
   }
+  calculateTotalPrice(): void {
+    this.totalPrice = this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  }
 }
+
