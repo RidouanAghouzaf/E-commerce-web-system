@@ -10,6 +10,8 @@ import { DropdownModule } from 'primeng/dropdown';
 import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { Subject } from 'rxjs';
 import { SharedService } from '../services/shared.service';
+import { WishlistService } from '../services/wishlist.service';
+
 
 
 interface Perfume {
@@ -29,11 +31,13 @@ interface Perfume {
 export class TrustedCompaniesComponent {
   private searchSubject = new Subject<string>();
   totalPrice: number = 0;
-
+  wishlistItems: any[] = []; // To hold wishlist items
   constructor(
     private cartService: CartService,
     private messageService: MessageService,
-    private sharedService: SharedService
+    private sharedService: SharedService,
+    private wishlistService: WishlistService,
+    
   ) {
     // Setup search query debounce
     this.searchSubject.pipe(
@@ -43,6 +47,11 @@ export class TrustedCompaniesComponent {
       this.searchQuery = searchQuery;
       this.onSearch();
     })
+  }
+  
+  ngOnInit(): void {
+    this.wishlistItems = this.wishlistService.getWishlistItems();
+    this.filteredCompanies=this.selectedCategory === 'parfumswomen' ? this.parfumswomen : this.parfumsmen;
   }
   onSearchInput(event: Event): void {
   const inputValue = (event.target as HTMLInputElement).value || '';
@@ -58,28 +67,28 @@ export class TrustedCompaniesComponent {
       name: 'Trust & Co. (Women)', 
       image: 'https://images.unsplash.com/photo-1601049676869-702ea24cfd58?q=80&w=2073&auto=format&fit=crop', 
       description: 'Women perfume.', 
-      tags: ['branding', 'luxury'],
+      
       price:50
     },
     { 
       name: 'Tonic (Women)', 
       image: 'https://images.unsplash.com/photo-1672848700942-68b6a4550540?q=80&w=1935&auto=format&fit=crop', 
       description: 'Women fragrance.', 
-      tags: ['luxury', 'floral'],
+      
       price:65
     },
     { 
       name: 'Interdit (Women)', 
       image: 'https://images.unsplash.com/photo-1667480099552-92bfee05685d?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
       description: 'Women fragrance.', 
-      tags: ['luxury', 'floral'],
+   
       price:70
     },
     { 
       name: 'Gio (Women)', 
       image: 'https://images.unsplash.com/photo-1706924179763-7f2744656823?q=80&w=1915&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
       description: 'Giorgia armani.', 
-      tags: ['luxury', 'floral'],
+      
       price:34
     }
 
@@ -90,28 +99,28 @@ export class TrustedCompaniesComponent {
       name: 'Shower Gel (Men)', 
       image: 'https://images.unsplash.com/photo-1673847401561-fcd75a7888c5?q=80&w=2070&auto=format&fit=crop', 
       description: 'Men’s shower gel fragrance.', 
-      tags: ['refreshing', 'masculine'],
+     
       price:40 
     },
     { 
       name: 'Tonic (Men)', 
       image: 'https://images.unsplash.com/photo-1672848700942-68b6a4550540?q=80&w=1935&auto=format&fit=crop', 
       description: 'Men fragrance.', 
-      tags: ['fresh', 'citrus'],
+     
       price:90 
     },
     { 
       name: 'Hugo Boss (Men)', 
       image: 'https://images.unsplash.com/photo-1664198891866-8a35b73bb95f?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
       description: 'Joe Malone.', 
-      tags: ['fresh', 'citrus'],
+     
       price:49 
     },
     { 
       name: 'King (men)', 
       image: 'https://images.unsplash.com/photo-1637336698223-0d5f048b09ee?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 
       description: 'King of Seduction.', 
-      tags: ['luxury', 'floral'],
+      
       price:122
     },
   ];
@@ -233,5 +242,36 @@ export class TrustedCompaniesComponent {
   calculateTotalPrice(): void {
     this.totalPrice = this.cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
   }
+  // Save item to wishlist
+  saveToWishlist(company: any): void {
+    this.wishlistService.addToWishlist(company);
+    this.wishlistItems = this.wishlistService.getWishlistItems(); // Update local list
+    this.messageService.add({ 
+      severity: 'info', 
+      summary: 'Saved to Wishlist', 
+      detail: `${company.name} has been added to your wishlist.` 
+    });
+  }
+
+  // Remove item from wishlist
+  removeFromWishlist(item: any): void {
+    this.wishlistService.removeFromWishlist(item);
+    this.wishlistItems = this.wishlistService.getWishlistItems(); // Update local list
+    this.messageService.add({ 
+      severity: 'info', 
+      summary: 'Removed from Wishlist', 
+      detail: `${item.name} has been removed from your wishlist.` 
+    });
+  }
+  showWishlistModal: boolean = false;
+
+openWishlistModal(): void {
+  this.wishlistItems = this.wishlistService.getWishlistItems();
+  this.showWishlistModal = true;
+}
+
+closeWishlistModal(): void {
+  this.showWishlistModal = false;
+}
 }
 

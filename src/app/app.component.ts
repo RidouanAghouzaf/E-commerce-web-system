@@ -4,12 +4,13 @@ import { MenuBarComponent } from "./menu-bar/menu-bar.component";
 import { RendezVousComponent } from './rendez-vous/rendez-vous.component';
 import { TrustedCompaniesComponent } from './trusted-companies/trusted-companies.component';
 import { ToastModule } from 'primeng/toast'; // Import PrimeNG Toast module
-import { MessageService } from 'primeng/api'; // Import MessageService
+import { MessageService } from 'primeng/api';
+import { ChatbotComponent } from "./chatbot.component/chatbot.component"; // Import MessageService
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [MessageService], // Add MessageService as a provider
-  imports: [RouterOutlet,MenuBarComponent,RendezVousComponent,TrustedCompaniesComponent,ToastModule],
+  imports: [RouterOutlet, MenuBarComponent, RendezVousComponent, TrustedCompaniesComponent, ToastModule, ChatbotComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

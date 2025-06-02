@@ -64,13 +64,7 @@ items = [
 
 
 
-// addToCart(item: any): void {
-//   this.cartItems.push(item);
-// }
 
-// removeFromCart(index: number): void {
-//   this.cartItems.splice(index, 1);
-// }
 handleSearchInput(event: Event): void {
   const inputValue = (event.target as HTMLInputElement).value || '';
   this.sharedService.updateSearchQuery(inputValue); // Update the search query in the shared service

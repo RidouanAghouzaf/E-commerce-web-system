@@ -1,31 +1,37 @@
 <section>
-  <h2>Leading companies<br />have trusted us</h2>
+  <h2>Create Lasting Impressions <br />with Every Spray</h2>
+
+  <!-- Navbar with Wishlist Link -->
+  <nav class="navbar">
+    <div class="nav-links">
+      
+      <a href="#wishlist-section">Wishlist</a>
+    </div>
+    <!-- Wishlist Icon in Navbar -->
+    <div class="wishlist-icon" (click)="openWishlistModal()">
+      <i class="pi pi-heart"></i> Wishlist ({{ wishlistItems.length }})
+    </div>
+  </nav>
 
   <!-- Search Section with Category Dropdown -->
   <div class="search-container">
     <!-- Category Dropdown -->
     <p-dropdown 
-    [(ngModel)]="selectedCategory" 
-    [options]="categoryOptions"
-    optionLabel="label"
-    placeholder="Select Category"
-    (onChange)="onSearch()">
-  </p-dropdown>
+      [(ngModel)]="selectedCategory" 
+      [options]="categoryOptions"
+      optionLabel="label"
+      placeholder="Select Category"
+      (onChange)="onSearch()">
+    </p-dropdown>
 
     <!-- Search Input with Animated Search Icon -->
     <div class="search">
-      <svg x="0px" y="0px" viewBox="0 0 24 24" width="20px" height="20px">
-        <g stroke-linecap="square" stroke-linejoin="miter" stroke="currentColor">
-          <line fill="none" stroke-miterlimit="10" x1="22" y1="22" x2="16.4" y2="16.4" />
-          <circle fill="none" stroke="currentColor" stroke-miterlimit="10" cx="10" cy="10" r="9" />
-        </g>
-      </svg>
+      <i class="pi pi-search search-icon"></i> 
       <input
-  pInputText
-  class="ng-invalid ng-dirty"
-  placeholder="Search companies..."
-  (input)="onSearchInput($event)"
-/>
+        pInputText
+        class="ng-invalid ng-dirty"
+        placeholder="Search perfumes..."
+        (input)="onSearchInput($event)" />
     </div>
     
     <!-- Dropdown Suggestions for Perfumes -->
@@ -59,22 +65,67 @@
           <li
             *ngFor="let tag of company.tags"
             [style]="'--clr-tag:' + tagColor(tag)"
-            class="tag"
-          >
+            class="tag">
             {{ tag }}
           </li>
         </ul>
-        <!-- Add to Cart and Buy Now Buttons -->
+        <!-- Add to Cart and Wishlist Buttons -->
         <div class="button-group">
-          <button class="btn btn-add-to-cart" (click)="addToCart(company)">Add to Cart</button>
-          <button class="btn btn-buy-now" (click)="buyNow(company)">Buy Now</button>
+          <!-- <button class="btn btn-add-to-cart" (click)="addToCart(company)">Add to Cart</button> -->
+          <button 
+          class="btn btn-buy-now" 
+          (click)="buyNow(company)" 
+          style="background-color: black; color: white; border: none; padding: 10px 20px; border-radius: 5px;">
+          Add To Cart
+        </button>
+                  <button class="btn btn-save-to-wishlist" (click)="saveToWishlist(company)">Save to Wishlist</button>
         </div>
       </div>
     </div>
   </div>
 
+  <!-- Wishlist Section (Dedicated View) -->
+  <section id="wishlist-section">
+    <h2>Your Wishlist</h2>
+    <div class="wishlist-container">
+      <div *ngIf="wishlistItems.length > 0">
+        <div class="wishlist-item" *ngFor="let item of wishlistItems">
+          <img [src]="item.image" [alt]="item.name" class="wishlist-item-image" />
+          <div class="wishlist-item-details">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <button class="btn btn-remove-from-wishlist" (click)="removeFromWishlist(item)">Remove</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="wishlistItems.length === 0">
+        <p>Your wishlist is empty.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Wishlist Modal -->
+  <p-dialog [(visible)]="showWishlistModal" header="Your Wishlist" [closable]="true" (onHide)="closeWishlistModal()">
+    <ng-template pTemplate="content">
+      <div *ngIf="wishlistItems.length > 0">
+        <div class="wishlist-item" *ngFor="let item of wishlistItems">
+          <img [src]="item.image" [alt]="item.name" class="wishlist-item-image" />
+          <div class="wishlist-item-details">
+            <h3>{{ item.name }}</h3>
+            <p>{{ item.description }}</p>
+            <button class="btn btn-remove-from-wishlist" (click)="removeFromWishlist(item)">Remove</button>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="wishlistItems.length === 0">
+        <p>Your wishlist is empty.</p>
+      </div>
+    </ng-template>
+  </p-dialog>
+
   <!-- Modal Dialog for Cart -->
-  <p-dialog [(visible)]="showModal" header="Your Cart" [closable]="true" (onHide)="closeModal()" 
+  <p-dialog [(visible)]="showModal" header="Your Cart" [closable]="true" 
+            (onHide)="closeModal()" 
             [style]="{'position': 'absolute', 'top': '20px', 'right': '20px', 'width': '400px'}">
     <ng-template pTemplate="content">
       <div *ngIf="cartItems.length > 0">
@@ -97,12 +148,10 @@
           </button>
         </div>
       </div>
-      
       <div *ngIf="cartItems.length === 0">
         <p>Your cart is empty.</p>
       </div>
     </ng-template>
   </p-dialog>
-
 </section>
 <p-toast></p-toast>

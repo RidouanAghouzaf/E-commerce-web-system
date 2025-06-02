@@ -1,90 +1,88 @@
 :host ::ng-deep .p-menubar {
-    background-color: #f3f0f0;
+  background-color: #f3f0f0; // Light gray background
+  padding: 0 20px; // Add padding to the sides
+  border-radius: 8px; // Rounded corners
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); // Subtle shadow
 
-    /* Light gray background color */
-    .p-menuitem {
-        .p-menuitem-text {
-            //font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-            white-space: nowrap;
-        }
-
-        .p-menuitem-content {
-            width: 100%;
-            //width: fit-content;
-        }
+  // Menu items styling
+  .p-menuitem {
+    .p-menuitem-text {
+      white-space: nowrap; // Prevent text wrapping
+      font-weight: 500; // Medium font weight
+      color: #333; // Dark text color
     }
-}
-.cart {
-    position: relative;
-    cursor: pointer;
-    margin-right: 10px;
-}
 
-.cart-icon {
-    font-size: 24px;
-    color: #555;
-}
+    .p-menuitem-content {
+      width: 100%; // Full width for menu items
+      &:hover {
+        background-color: #e0e0e0; // Light gray hover background
+      }
+    }
+  }
 
-.cart-badge {
-    position: absolute;
-    top: -5px;
-    right: -10px;
-    background-color: #ff0000;
-    color: #fff;
-    border-radius: 50%;
-    font-size: 12px;
-    padding: 2px 6px;
-    font-weight: bold;
-}
+  // Search bar styling
+  .search {
+    display: flex;
+    align-items: center;
+    margin: 0 auto; // Center the search bar
+    max-width: 400px; // Limit search bar width
+    width: 100%; // Full width within max-width
+    background-color: #fff; // White background
+    border-radius: 20px; // Rounded corners
+    padding: 5px 15px; // Inner padding
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); // Subtle shadow
 
-.cart-icon {
+    .search-icon {
+      color: #666; // Gray icon color
+      margin-right: 10px; // Space between icon and input
+    }
+
+    input {
+      border: none; // Remove default border
+      outline: none; // Remove outline on focus
+      background: transparent; // Transparent background
+      width: 100%; // Full width
+      font-size: 14px; // Font size
+      &::placeholder {
+        color: #999; // Light gray placeholder
+      }
+    }
+  }
+
+  // Cart button styling
+  .cart-icon {
     position: relative;
     background: none;
     border: none;
     cursor: pointer;
-    color: #fff;
-  
+    color: #555; // Gray icon color
+
     .pi-shopping-cart {
-      font-size: 24px;
+      font-size: 24px; // Icon size
     }
-  
+
     .cart-count {
       position: absolute;
-      top: 0;
-      right: 0;
-      background-color: #f00;
-      color: #fff;
-      font-size: 12px;
+      top: -5px;
+      right: -10px;
+      background-color: #f00; // Red background for count
+      color: #fff; // White text
+      font-size: 12px; // Font size
       font-weight: bold;
-      border-radius: 50%;
-      padding: 4px 6px;
-      transform: translate(50%, -50%);
+      border-radius: 50%; // Circular shape
+      padding: 4px 8px; // Padding
     }
   }
+
+  // Logo styling
   .logo-container {
     display: flex;
     align-items: center;
+
+    .menu-logo {
+      height: 40px; // Logo height
+      width: auto; // Maintain aspect ratio
+      margin-right: 20px; // Space between logo and menu items
+    }
   }
-  
-  .menu-logo {
-    height: 40px; /* Adjust the height to fit your design */
-    width: auto; /* Maintain aspect ratio */
-    margin-right: 20px; /* Add spacing between the logo and the menu items */
-  }
-  .menu-logo {
-    height: 40px;
-    margin-right: 20px;
-  }
-  
-  .search {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-  }
-  
-  .search input {
-    margin-left: 10px;
-    padding: 5px;
-    border-radius: 4px;
-  }
-  
+}

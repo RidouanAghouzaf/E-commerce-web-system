@@ -1,0 +1,39 @@
+<div class="chatbot-toggle" (click)="toggleChat()">
+    <i class="pi pi-comment"></i>
+  </div>
+  
+  <div class="chatbot-container" *ngIf="chatOpen">
+    <div class="chatbot-header">
+      <h3>Conseiller Parfums</h3>
+      <button (click)="toggleChat()" class="close-btn">×</button>
+    </div>
+  
+    <div class="chatbot-messages">
+      <div *ngFor="let message of messages" class="message" [class.user]="message.isUser">
+        <div class="message-content">{{message.text}}</div>
+        <div *ngIf="message.product" class="product-card">
+          <img [src]="message.product.image" alt="{{message.product.name}}">
+          <div class="product-info">
+            <h4>{{message.product.name}}</h4>
+            <p class="price">{{message.product.price}}€</p>
+            <p *ngIf="message.product.description" class="description">{{message.product.description}}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <div class="quick-suggestions">
+      <button *ngFor="let suggestion of quickSuggestions" 
+              (click)="sendSuggestion(suggestion)"
+              class="suggestion-btn">
+        {{suggestion}}
+      </button>
+    </div>
+  
+    <div class="chatbot-input">
+      <input [(ngModel)]="userInput" 
+             (keyup.enter)="sendMessage()" 
+             placeholder="Posez votre question...">
+      <button (click)="sendMessage()">Envoyer</button>
+    </div>
+  </div>

@@ -1,0 +1,57 @@
+<div class="checkout-container">
+    <h1>Checkout</h1>
+  
+    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+      <div class="form-group">
+        <label for="name">Full Name:</label>
+        <input id="name" formControlName="name" type="text" />
+      </div>
+  
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input id="email" formControlName="email" type="email" />
+      </div>
+  
+      <div class="form-group">
+        <label for="address">Address:</label>
+        <input id="address" formControlName="address" type="text" />
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City:</label>
+          <input id="city" formControlName="city" type="text" />
+        </div>
+  
+        <div class="form-group">
+          <label for="zip">ZIP Code:</label>
+          <input id="zip" formControlName="zip" type="text" />
+        </div>
+      </div>
+  
+      <h2>Payment Information</h2>
+      <div class="form-group">
+        <label for="cardNumber">Card Number:</label>
+        <input id="cardNumber" formControlName="cardNumber" type="text" />
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group">
+          <label for="expiry">Expiry Date:</label>
+          <input id="expiry" formControlName="expiry" type="text" placeholder="MM/YY" />
+        </div>
+  
+        <div class="form-group">
+          <label for="cvc">CVC:</label>
+          <input id="cvc" formControlName="cvc" type="text" />
+        </div>
+      </div>
+  
+      <button type="submit" [disabled]="isProcessing" class="btn btn-primary">
+        {{ isProcessing ? 'Processing...' : 'Submit Payment' }}
+      </button>
+  
+      <p *ngIf="paymentSuccess" class="success-message">Payment Successful! Thank you for your purchase.</p>
+    </form>
+  </div>
+  
